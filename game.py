@@ -26,6 +26,12 @@ class Game:
 
     #Metodos
     def do_action (self):
-        if self.action==1:
+        if self.action == 1:
             #INCOME
             return None,1,'add'
+        elif self.action == 2:
+            #Foreign Aid
+            return None,2,'add'
+        elif self.action == 3:
+            #Coup
+            return 'Coup',7,'take'

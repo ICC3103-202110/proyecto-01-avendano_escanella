@@ -28,6 +28,62 @@ def influences_actions():
     print("8. Steal: Take 2 coins from other player (Captain)")
     return int(input())
 
+def Coup(victim):
+    if victim== Player1.name:
+        print(f'{victim} choose a card to reveal')
+        print(f'1: {Player1.card1} or 2: {Player1.card2}')
+        card_reveal=str(input())
+        if card_reveal=='1':
+            reveal= Player1.card1
+            Player1.card1=None
+            return reveal
+        else:
+            reveal=Player1.card2
+            Player1.card2=None
+            return reveal
+
+    elif victim== Player2.name:
+        print(f'{victim} choose a card to reveal')
+        print(f'1: {Player2.card1} or 2: {Player2.card2}')
+        card_reveal=str(input())
+        if card_reveal=='1':
+            reveal= Player2.card1
+            Player2.card1=None
+            return reveal
+        else:
+            reveal=Player2.card2
+            Player2.card2=None
+            return reveal
+
+    elif victim== Player3.name:
+        print(f'{victim} choose a card to reveal')
+        print(f'1: {Player3.card1} or 2: {Player3.card2}')
+        card_reveal=str(input())
+        if card_reveal=='1':
+            reveal= Player3.card1
+            Player3.card1=None
+            return reveal
+        else:
+            reveal=Player3.card2
+            Player3.card2=None
+            return reveal
+
+    elif victim== Player4.name:
+        print(f'{victim} choose a card to reveal')
+        print(f'1: {Player4.card1} or 2: {Player4.card2}')
+        card_reveal=str(input())
+        if card_reveal=='1':
+            reveal= Player4.card1
+            Player4.card1=None
+            return reveal
+        else:
+            reveal=Player4.card2
+            Player4.card2=None
+            return reveal
+    else:
+        print('You don`t choose a valid player')
+
+
 deck=['Duke','Duke','Duke','Assassin','Assassin','Assassin','Ambassador','Ambassador','Ambassador',
     'Captain','Captain','Captain','Contessa','Contessa','Contessa']
 random.shuffle(deck)
@@ -39,13 +95,15 @@ while a==True:
         a=False
     else:
         print("You can play with 3 or 4 players")
-        print()
+print()
 
 total_players=[]
+nara=['None','None']
 if num_player==3:
     Player1=create_players(deck,1)
     Player2=create_players(deck,2)
     Player3=create_players(deck,3)
+    Player4=create_players(nara,4)
     total_players.append(Player1)
     total_players.append(Player2)
     total_players.append(Player3)
@@ -61,27 +119,53 @@ else:
     total_players.append(Player4)
 
 round_=1
+cards_reveals=[]
+
 while True:
     for k in range(num_player):
-        print(f'----- Player{k+1} -----')
-        menu1 = menu_selection()
-        if menu1 == 4:
-            menu1 = influences_actions()
+        pass_=0
         plyer=total_players[k]
-        game_=Game(round_,plyer,menu1)
-        act,value,plus_min=game_.do_action()
-        if plus_min == 'add':
+        print(f'----- Player{k+1} -----')
+        if plyer.coins <10:
+            menu1 = menu_selection()
+            if menu1 == 4:
+                menu1 = influences_actions()
+            game_=Game(round_,plyer,menu1)
+            act,value,plus_min=game_.do_action()
+   
+            if act=='Coup':
+                if plyer.coins<7:
+                    print(f'You can´t coup because you have ¢{plyer.coins} coins')
+                    pass_=1
+                else:
+                    victim=str(input('Choose a player to coup (Ex: Player1): '))
+                    reveal=Coup(victim)
+                    cards_reveals.append(reveal)
+    
+        else:
+            print('You have to Coup')
+            victim=str(input('Choose a player to coup (Ex: Player1): '))
+            reveal=Coup(victim)
+            cards_reveals.append(reveal)
+            plus_min='take'
+            value=7
+        
+
+        if plus_min == 'add' and pass_==0:
             plyer.coins += value
 
-        elif plus_min == 'take':
+        elif plus_min == 'take' and pass_==0:
             try:
                 plyer.coins -= value
 
             except Exception as e:
                 print(e)
-            
-
+        
+        print('nombre: ',Player2.name,' cards1: ',Player2.card1,' cards2: ',Player2.card2,' coins: ',Player2.coins)
+        print(cards_reveals)
         print(plyer.coins)
         break
-    break
+        
+
     round_+=1
+    break

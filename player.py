@@ -13,14 +13,25 @@ class Player:
     def name(self):
         return self.__name
 
+
     @property
     def card1(self):
         return self.__card1
-    
+
+    @card1.setter
+    def card1 (self, new_card):
+        self.__card1=new_card
+
+
     @property
     def card2(self):
         return self.__card2
-    
+
+    @card2.setter
+    def card2 (self, new_card):
+        self.__card2=new_card
+
+
     @property
     def coins(self):
         return self.__coins
@@ -30,7 +41,7 @@ class Player:
         if self.__coins > 0:
             self.__coins=value
         else:
-            raise Exception(f'Your coins are not enough to do this action. /nTotal of coins: {self.__coins}')
+            raise Exception(f'Your coins are not enough to do this action. /nTotal of coins is ¢{self.__coins}')
 
 
 
