@@ -26,3 +26,7 @@ class Player:
         return self.__coins
 
     #Metodos
+    def add_coins(self,value):
+        coins = self.coins + value
+        return coins
+        
