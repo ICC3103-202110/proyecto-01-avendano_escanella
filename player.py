@@ -25,8 +25,14 @@ class Player:
     def coins(self):
         return self.__coins
 
-    #Metodos
-    def add_coins(self,value):
-        coins = self.coins + value
-        return coins
+    @coins.setter
+    def coins (self,value):     
+        if self.__coins > 0:
+            self.__coins=value
+        else:
+            raise Exception(f'Your coins are not enough to do this action. /nTotal of coins: {self.__coins}')
+
+
+
+    
         
