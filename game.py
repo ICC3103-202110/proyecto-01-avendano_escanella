@@ -43,4 +43,6 @@ class Game:
         elif self.action == 7:
             #Exchange
             return 'Exchange',None,None
-        
+        elif self.action == 8:
+            #Steal
+            return 'Steal',2,'add'

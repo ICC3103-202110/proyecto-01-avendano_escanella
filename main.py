@@ -198,10 +198,11 @@ while True:
                     reveal=Coup(victim)
                     cards_reveals.append(reveal)
             
-            if act == 'Assassinate':
+            elif act == 'Assassinate':
                 victim1=str(input('Choose a player to assassinate (Ex: Player1): '))
+                reveal = kill(victim1)
             
-            if act == 'Exchange':
+            elif act == 'Exchange':
                 c1 = deck[0]
                 c2 = deck[1]
                 deck.pop(0)
@@ -219,10 +220,35 @@ while True:
                 deck.append(tobechosen[numbers[0]-1])
                 deck.append(tobechosen[numbers[1]-1])
                 random.shuffle(deck)
-
-
-
-
+            
+            elif act == 'Steal':
+                mugged = str(input('Choose a player to steal coins from (Ex: Player1): '))
+                if mugged == Player1.name:
+                    if Player1.coins == 1:
+                        Player1.coins -= 1
+                        value = 1
+                    else:
+                        Player1.coins -= 2
+                elif mugged == Player2.name:
+                    if Player2.coins == 1:
+                        Player2.coins -= 1
+                        value = 1
+                    else:
+                        Player2.coins -= 2
+                elif mugged == Player3.name:
+                    if Player3.coins == 1:
+                        Player3.coins -= 1
+                        value = 1
+                    else:
+                        Player3.coins -= 2
+                elif mugged == Player4.name:
+                    if Player4.coins == 1:
+                        Player4.coins -= 1
+                        value = 1
+                    else:
+                        Player4.coins -= 2
+                else:
+                    print('You didn`t choose a valid player')
                 
         else:
             print('You have to Coup')
