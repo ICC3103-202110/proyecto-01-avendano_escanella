@@ -28,6 +28,14 @@ def influences_actions():
     print("8. Steal: Take 2 coins from other player (Captain)")
     return int(input())
 
+def menu_options():
+    print('What do you want to do?')
+    print('1. Nothing')
+    print('2. Counteract')
+    print('3. Challenge')
+    return int(input())
+
+#def challenge(challenged,challenger):
 def Coup(victim):
     if victim== Player1.name:
         print(f'{victim} choose a card to reveal')
@@ -138,8 +146,6 @@ def kill(victim):
     else:
         print('You didn`t choose a valid player')
 
-
-#def counteract():
 deck=['Duke','Duke','Duke','Assassin','Assassin','Assassin','Ambassador','Ambassador','Ambassador',
     'Captain','Captain','Captain','Contessa','Contessa','Contessa']
 random.shuffle(deck)
@@ -268,11 +274,58 @@ while True:
             except Exception as e:
                 print(e)
         
-        print('nombre: ',Player2.name,' cards1: ',Player2.card1,' cards2: ',Player2.card2,' coins: ',Player2.coins)
+        other_players = total_players.copy()
+        other_players.pop(k)
+        p_action = []
+        do = []
+
+        for y in range(len(other_players)):
+            print()
+            print(f'---{other_players[y].name}---')
+            option = menu_options()
+            if option == 2:
+                p_action.append(other_players[y])
+                do.append('Counteract')
+            elif option == 3:
+                p_action.append(other_players[y])
+                do.append('Challenge')
+        
+        encounter = 0
+        ch = 0
+        if len(do) >= 1:
+            for j in range(len(do)):
+                if do[j] == 'Counteract':
+                    encounter += 1
+                elif do[j] == 'Challenge'
+                    ch += 1
+            
+            if ch == 1:
+                pos = do.find('Challenge')
+                pp = p_action[pos]
+                #LLAMAR A LA FUNCIÓN CHALLENGE
+            elif ch > 1:
+                ran = random.uniform(1,ch)
+                pos = do.find('Challenge',ran)
+                pp = p_action[pos]
+                #LLAMAR A LA FUNCIÓN CHALLENGE
+            
+            if encounter == 1:
+                pos = do.find('Counteract')
+                pp = p_action[pos]
+                #LLAMAR A LA FUNCIÓN CHALLENGE
+            elif encounter > 1:
+                ran = random.uniform(1,ch)
+                pos = do.find('Counteract',ran)
+                pp = p_action[pos]
+                #LLAMAR A LA FUNCIÓN CHALLENGE
+            
+
+
+        #print('nombre: ',Player2.name,' card1: ',Player2.card1,' card2: ',Player2.card2,' coins: ',Player2.coins)
         print(cards_reveals)
         print(plyer.coins)
         break
-        
-
+    
+    
     round_+=1
     break

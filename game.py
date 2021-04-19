@@ -24,7 +24,7 @@ class Game:
 
   
     #Metodos
-    def do_action (self):
+    def do_action(self):
         if self.action == 1:
             #INCOME
             return None,1,'add'
