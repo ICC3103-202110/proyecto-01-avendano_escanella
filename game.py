@@ -23,7 +23,6 @@ class Game:
         return self.__action
 
   
-
     #Metodos
     def do_action (self):
         if self.action == 1:
@@ -35,3 +34,13 @@ class Game:
         elif self.action == 3:
             #Coup
             return 'Coup',7,'take'
+        elif self.action == 5:
+            #Duke
+            return None,3,'add'
+        elif self.action == 6:
+            #Assassinate
+            return 'Assassinate',3,'take'
+        elif self.action == 7:
+            #Exchange
+            return 'Exchange',None,None
+        

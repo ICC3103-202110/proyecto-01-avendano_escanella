@@ -81,9 +81,65 @@ def Coup(victim):
             Player4.card2=None
             return reveal
     else:
-        print('You don`t choose a valid player')
+        print('You didn`t choose a valid player')
+
+def kill(victim):
+    if victim== Player1.name:
+        print(f'{victim} choose a card to reveal')
+        print(f'1: {Player1.card1} or 2: {Player1.card2}')
+        card_reveal=str(input())
+        if card_reveal=='1':
+            reveal= Player1.card1
+            Player1.card1=None
+            return reveal
+        else:
+            reveal=Player1.card2
+            Player1.card2=None
+            return reveal
+
+    elif victim== Player2.name:
+        print(f'{victim} choose a card to reveal')
+        print(f'1: {Player2.card1} or 2: {Player2.card2}')
+        card_reveal=str(input())
+        if card_reveal=='1':
+            reveal= Player2.card1
+            Player2.card1=None
+            return reveal
+        else:
+            reveal=Player2.card2
+            Player2.card2=None
+            return reveal
+
+    elif victim== Player3.name:
+        print(f'{victim} choose a card to reveal')
+        print(f'1: {Player3.card1} or 2: {Player3.card2}')
+        card_reveal=str(input())
+        if card_reveal=='1':
+            reveal= Player3.card1
+            Player3.card1=None
+            return reveal
+        else:
+            reveal=Player3.card2
+            Player3.card2=None
+            return reveal
+
+    elif victim== Player4.name:
+        print(f'{victim} choose a card to reveal')
+        print(f'1: {Player4.card1} or 2: {Player4.card2}')
+        card_reveal=str(input())
+        if card_reveal=='1':
+            reveal= Player4.card1
+            Player4.card1=None
+            return reveal
+        else:
+            reveal=Player4.card2
+            Player4.card2=None
+            return reveal
+    else:
+        print('You didn`t choose a valid player')
 
 
+#def counteract():
 deck=['Duke','Duke','Duke','Assassin','Assassin','Assassin','Ambassador','Ambassador','Ambassador',
     'Captain','Captain','Captain','Contessa','Contessa','Contessa']
 random.shuffle(deck)
@@ -141,7 +197,33 @@ while True:
                     victim=str(input('Choose a player to coup (Ex: Player1): '))
                     reveal=Coup(victim)
                     cards_reveals.append(reveal)
-    
+            
+            if act == 'Assassinate':
+                victim1=str(input('Choose a player to assassinate (Ex: Player1): '))
+            
+            if act == 'Exchange':
+                c1 = deck[0]
+                c2 = deck[1]
+                deck.pop(0)
+                deck.pop(0)
+                numbers = [1,2,3,4]
+                print("Choose 2 cards between the ones you've got from the deck and the ones you had before: ")
+                tobechosen = [c1, c2, plyer.card1, plyer.card2]
+                print(f'1: {c1}, 2: {c2}, 3: {plyer.card1}, 4: {plyer.card2}')
+                chosen = str(input("Example: 1,3: "))
+                chosen = chosen.split(',')
+                plyer.card1 = tobechosen[int(chosen[0])-1]
+                plyer.card2 = tobechosen[int(chosen[1])-1]
+                numbers.pop(int(chosen[0])-1)
+                numbers.pop(int(chosen[1])-2)
+                deck.append(tobechosen[numbers[0]-1])
+                deck.append(tobechosen[numbers[1]-1])
+                random.shuffle(deck)
+
+
+
+
+                
         else:
             print('You have to Coup')
             victim=str(input('Choose a player to coup (Ex: Player1): '))
@@ -149,7 +231,6 @@ while True:
             cards_reveals.append(reveal)
             plus_min='take'
             value=7
-        
 
         if plus_min == 'add' and pass_==0:
             plyer.coins += value
