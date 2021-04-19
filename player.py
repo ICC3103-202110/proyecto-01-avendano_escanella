@@ -38,7 +38,7 @@ class Player:
 
     @coins.setter
     def coins (self,value):     
-        if self.__coins > 0:
+        if self.__coins >= 0:
             self.__coins=value
         else:
             raise Exception(f'Your coins are not enough to do this action. /nTotal of coins is ¢{self.__coins}')

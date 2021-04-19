@@ -35,7 +35,48 @@ def menu_options():
     print('3. Challenge')
     return int(input())
 
-#def challenge(challenged,challenger):
+def challenge(challenged,challenger):
+    print('hola')
+
+def menu_counteract():
+    print('What do you want to do?')
+    print('1. DUKE: Blocks foreign aid')
+    print('2. AMBASSADOR / CAPTAIN: Blocks stealing')
+    print('3. CONTESSA: Blocks assassination')
+    return int(input())
+
+def counteract(challenged,challenger,card,action):
+    if act == 'Assassinate' and card ==3:
+        print(f'{challenged.name} your assassination was counteracted by Contessa')
+        opt=str(input(f'Do you want to challenge {challenger.name}? Options: yes / no: '))
+        if opt=='yes':
+            valid=challenge(challenger,challenged)
+            if valid=='Not_Today':
+                return 'Not_Today'
+        else:
+            return 'Not_Today'
+    if act == 'Foreign Aid' and card ==1:
+        print(f'{challenged.name} your petition for foreign aid was cancelled by Duke')
+        opt=str(input(f'Do you want to challenge {challenger.name}? Options: yes / no: '))
+        if opt=='yes':
+            valid=challenge(challenger,challenged)
+            if valid=='Not_Today':
+                return 'Not_Today'
+            
+        else:
+            return 'Not_Today'
+    if act == 'Steal' and card==2:
+        print(f'{challenged.name} your attent for stealing was cancelled by Ambassador or Captian')
+        opt=str(input(f'Do you want to challenge {challenger.name}? Options: yes / no: '))
+        if opt=='yes':
+            valid=challenge(challenger,challenged)
+            if valid=='Not_Today':
+                return 'Not_Today'
+            
+        else:
+            return 'Not_Today'
+
+
 def Coup(victim):
     if victim== Player1.name:
         print(f'{victim} choose a card to reveal')
@@ -99,11 +140,11 @@ def kill(victim):
         if card_reveal=='1':
             reveal= Player1.card1
             Player1.card1=None
-            return reveal
+            return reveal,'1'
         else:
             reveal=Player1.card2
             Player1.card2=None
-            return reveal
+            return reveal,'2'
 
     elif victim== Player2.name:
         print(f'{victim} choose a card to reveal')
@@ -112,11 +153,11 @@ def kill(victim):
         if card_reveal=='1':
             reveal= Player2.card1
             Player2.card1=None
-            return reveal
+            return reveal,'1'
         else:
             reveal=Player2.card2
             Player2.card2=None
-            return reveal
+            return reveal,'2'
 
     elif victim== Player3.name:
         print(f'{victim} choose a card to reveal')
@@ -125,11 +166,11 @@ def kill(victim):
         if card_reveal=='1':
             reveal= Player3.card1
             Player3.card1=None
-            return reveal
+            return reveal,'1'
         else:
             reveal=Player3.card2
             Player3.card2=None
-            return reveal
+            return reveal,'2'
 
     elif victim== Player4.name:
         print(f'{victim} choose a card to reveal')
@@ -138,14 +179,83 @@ def kill(victim):
         if card_reveal=='1':
             reveal= Player4.card1
             Player4.card1=None
-            return reveal
+            return reveal,'1'
         else:
             reveal=Player4.card2
             Player4.card2=None
-            return reveal
+            return reveal,'2'
     else:
         print('You didn`t choose a valid player')
 
+def cancel_assassination(victim,reveal,pos):
+    if victim== Player1.name:
+        if pos=='1':
+            Player1.card1=reveal
+        else:
+            Player1.card2=reveal
+    elif victim== Player2.name:
+        if pos=='1':
+            Player2.card1=reveal
+        else:
+            Player2.card2=reveal
+    if victim== Player3.name:
+        if pos=='1':
+            Player3.card1=reveal
+        else:
+            Player3.card2=reveal
+    elif victim== Player4.name:
+        if pos=='1':
+            Player4.card1=reveal
+        else:
+            Player4.card2=reveal
+
+def steal_(mugged):
+    if mugged == Player1.name:
+        if Player1.coins == 1:
+            Player1.coins -= 1
+            value = 1
+        else:
+            Player1.coins -= 2
+            value=2
+    elif mugged == Player2.name:
+        if Player2.coins == 1:
+            Player2.coins -= 1
+            value = 1
+        else:
+            Player2.coins -= 2
+            value=2
+    elif mugged == Player3.name:
+        if Player3.coins == 1:
+            Player3.coins -= 1
+            value = 1
+        else:
+            Player3.coins -= 2
+            value=2
+    elif mugged == Player4.name:
+        if Player4.coins == 1:
+            Player4.coins -= 1
+            value = 1
+        else:
+            Player4.coins -= 2
+            value=2
+    return value
+
+def cancel_stealing(mugged,value):
+    if mugged == Player1.name:
+        Player1.coins += value
+        
+    elif mugged == Player2.name:
+        Player2.coins += value
+    elif mugged == Player3.name:
+        Player3.coins += value
+    elif mugged == Player4.name:
+        Player4.coins += value
+    else:
+        print('You didn`t choose a valid player')
+  
+
+
+    
 deck=['Duke','Duke','Duke','Assassin','Assassin','Assassin','Ambassador','Ambassador','Ambassador',
     'Captain','Captain','Captain','Contessa','Contessa','Contessa']
 random.shuffle(deck)
@@ -185,9 +295,10 @@ cards_reveals=[]
 
 while True:
     for k in range(num_player):
-        pass_=0
         plyer=total_players[k]
         print(f'----- Player{k+1} -----')
+        print(f'Your cards are: {plyer.card1}   {plyer.card2}')
+        # ACTIONS
         if plyer.coins <10:
             menu1 = menu_selection()
             if menu1 == 4:
@@ -198,15 +309,18 @@ while True:
             if act=='Coup':
                 if plyer.coins<7:
                     print(f'You can´t coup because you have ¢{plyer.coins} coins')
-                    pass_=1
+                    value=0
                 else:
                     victim=str(input('Choose a player to coup (Ex: Player1): '))
                     reveal=Coup(victim)
                     cards_reveals.append(reveal)
             
             elif act == 'Assassinate':
-                victim1=str(input('Choose a player to assassinate (Ex: Player1): '))
-                reveal = kill(victim1)
+                if plyer.coins<3:
+                    print(f'You can´t assassinate because you have ¢{plyer.coins} coins')
+                else:
+                    victim1=str(input('Choose a player to assassinate (Ex: Player1): '))
+                    reveal, pos_= kill(victim1)
             
             elif act == 'Exchange':
                 c1 = deck[0]
@@ -229,32 +343,7 @@ while True:
             
             elif act == 'Steal':
                 mugged = str(input('Choose a player to steal coins from (Ex: Player1): '))
-                if mugged == Player1.name:
-                    if Player1.coins == 1:
-                        Player1.coins -= 1
-                        value = 1
-                    else:
-                        Player1.coins -= 2
-                elif mugged == Player2.name:
-                    if Player2.coins == 1:
-                        Player2.coins -= 1
-                        value = 1
-                    else:
-                        Player2.coins -= 2
-                elif mugged == Player3.name:
-                    if Player3.coins == 1:
-                        Player3.coins -= 1
-                        value = 1
-                    else:
-                        Player3.coins -= 2
-                elif mugged == Player4.name:
-                    if Player4.coins == 1:
-                        Player4.coins -= 1
-                        value = 1
-                    else:
-                        Player4.coins -= 2
-                else:
-                    print('You didn`t choose a valid player')
+                value= steal_(mugged)
                 
         else:
             print('You have to Coup')
@@ -263,11 +352,11 @@ while True:
             cards_reveals.append(reveal)
             plus_min='take'
             value=7
-
-        if plus_min == 'add' and pass_==0:
+        # ADD OR TAKE COINS
+        if plus_min == 'add':
             plyer.coins += value
 
-        elif plus_min == 'take' and pass_==0:
+        elif plus_min == 'take' :
             try:
                 plyer.coins -= value
 
@@ -279,6 +368,7 @@ while True:
         p_action = []
         do = []
 
+        # COUNTERACT / CHALLENGE / NOTHING
         for y in range(len(other_players)):
             print()
             print(f'---{other_players[y].name}---')
@@ -296,32 +386,51 @@ while True:
             for j in range(len(do)):
                 if do[j] == 'Counteract':
                     encounter += 1
-                elif do[j] == 'Challenge'
+                elif do[j] == 'Challenge':
                     ch += 1
             
             if ch == 1:
-                pos = do.find('Challenge')
+                pos = do.index('Challenge')
                 pp = p_action[pos]
+                print (f'---{pp.name}---')
+                print('Challenge')
                 #LLAMAR A LA FUNCIÓN CHALLENGE
             elif ch > 1:
                 ran = random.uniform(1,ch)
-                pos = do.find('Challenge',ran)
+                pos = do.index('Challenge',ran)
                 pp = p_action[pos]
+                print (f'---{pp.name}---')
+                print('Challenge')
                 #LLAMAR A LA FUNCIÓN CHALLENGE
             
             if encounter == 1:
-                pos = do.find('Counteract')
+                pos = do.index('Counteract')
                 pp = p_action[pos]
-                #LLAMAR A LA FUNCIÓN CHALLENGE
+                print (f'---{pp.name}---')
+                print('Counteract')
+                count_=menu_counteract()
+                works=counteract(plyer,pp,count_,act)
+                if act=='Assassinate' and works=='Not_Today':
+                    cancel_assassination(victim1,reveal,pos_)
+                    reveal=None
+                elif act=='Assassinate' and works=='Today':
+                    cards_reveals.append(reveal)
+                elif act=='Foreign Aid' and works=='Not_Today':
+                    value=0
+                elif act=='Steal' and works=='Not_Today':
+                    cancel_stealing(mugged, value)
+                    plyer.coins -= value
+            
+                
             elif encounter > 1:
                 ran = random.uniform(1,ch)
-                pos = do.find('Counteract',ran)
+                pos = do.index('Counteract',ran)
                 pp = p_action[pos]
-                #LLAMAR A LA FUNCIÓN CHALLENGE
+                
             
 
 
-        #print('nombre: ',Player2.name,' card1: ',Player2.card1,' card2: ',Player2.card2,' coins: ',Player2.coins)
+        print('nombre: ',Player2.name,' card1: ',Player2.card1,' card2: ',Player2.card2,' coins: ',Player2.coins)
         print(cards_reveals)
         print(plyer.coins)
         break

@@ -30,7 +30,7 @@ class Game:
             return None,1,'add'
         elif self.action == 2:
             #Foreign Aid
-            return None,2,'add'
+            return "Foreign Aid",2,'add'
         elif self.action == 3:
             #Coup
             return 'Coup',7,'take'
