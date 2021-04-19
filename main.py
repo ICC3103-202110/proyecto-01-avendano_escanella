@@ -9,7 +9,7 @@ def create_players (deck,i):
     card2=deck[0]
     deck.pop(0)
     ply=f'Player{i}'
-    player_=Player(ply,card1,card2,2)
+    player_=Player(ply,card1,card2,5)
     return player_
 
 def menu_selection():
@@ -35,9 +35,110 @@ def menu_options():
     print('3. Challenge')
     return int(input())
 
-def challenge(challenged,challenger):
-    print('hola')
+def replace_card(player,pos_card,deck):
+    a=deck[0]
+    if pos_card==1:
+        old_card=player.card1
+        deck.append(old_card)
+        player.card1=a
+        deck.pop(0)
+    else:
+        old_card=player.card2
+        deck.append(old_card)
+        player.card1=a
+        deck.pop(0)
+    
+    return deck
 
+def challenge(challenged,challenger,action,deck):
+    print (f'{challenged.name} which card you are going to reveal?')
+    print(f'1. {challenged.card1} or 2. {challenged.card2}')
+    card=int(input())
+
+    if card==1:
+        card_=challenged.card1
+    else:
+        card_= challenged.card2
+
+    # DOUBT ACTION
+    if act=='Tax' and card_!='Duke':
+        if card==1:
+            card_to_deck=challenged.card1
+            challenged.card1=None
+        if card==2:
+            card_to_deck=challenged.card2
+            challenged.card2=None
+        return 'Not_Today', card_to_deck,deck
+    
+    elif act=='Assassinate' and card_!='Assassin':
+        if card==1:
+            card_to_deck=challenged.card1
+            challenged.card1=None
+        if card==2:
+            card_to_deck=challenged.card2
+            challenged.card2=None
+        return 'Not_Today', card_to_deck,deck
+    
+    elif act=='Exchange' and card_!='Ambassador':
+        if card==1:
+            card_to_deck=challenged.card1
+            challenged.card1=None
+        if card==2:
+            card_to_deck=challenged.card2
+            challenged.card2=None
+        return 'Not_Today', card_to_deck ,deck
+
+    elif act=='Steal' and card!='Captain':
+        if card==1:
+            card_to_deck=challenged.card1
+            challenged.card1=None
+        if card==2:
+            card_to_deck=challenged.card2
+            challenged.card2=None
+        return 'Not_Today', card_to_deck ,deck
+    
+    # DOUBT COUNTERACT
+    elif act=='doubt Contessa' and card_!='Contessa':
+        if card==1:
+            card_to_deck=challenged.card1
+            challenged.card1=None
+        if card==2:
+            card_to_deck=challenged.card2
+            challenged.card2=None
+        return 'Not_Today', card_to_deck ,deck
+
+    elif act=='doubt Duke' and card_!='Duke':
+        if card==1:
+            card_to_deck=challenged.card1
+            challenged.card1=None
+        if card==2:
+            card_to_deck=challenged.card2
+            challenged.card2=None
+        return 'Not_Today', card_to_deck ,deck
+
+    elif act=='doubt Ambassador or Captain' and (card_!='Ambassador' or card_!='Captain'):
+        if card==1:
+            card_to_deck=challenged.card1
+            challenged.card1=None
+        if card==2:
+            card_to_deck=challenged.card1
+            challenged.card2=None
+        return 'Not_Today', card_to_deck ,deck
+    
+    else:
+        print(f'{challenger.name} you have lost the challenge')
+        print('Which card are you going to reveal?')
+        print(f'1. {challenger.card1} or 2. {challenger.card2}')
+        reveal_=int(input())
+        if reveal_==1:
+            reveal_card=challenger.card1
+        else:
+            reveal_card=challenger.card2
+
+        deck=replace_card(challenged,card_,deck)
+
+        return 'Today', reveal_card, deck
+    
 def menu_counteract():
     print('What do you want to do?')
     print('1. DUKE: Blocks foreign aid')
@@ -45,36 +146,45 @@ def menu_counteract():
     print('3. CONTESSA: Blocks assassination')
     return int(input())
 
-def counteract(challenged,challenger,card,action):
+def counteract(challenged,challenger,card,action,deck):
     if act == 'Assassinate' and card ==3:
         print(f'{challenged.name} your assassination was counteracted by Contessa')
         opt=str(input(f'Do you want to challenge {challenger.name}? Options: yes / no: '))
         if opt=='yes':
-            valid=challenge(challenger,challenged)
+            act_count='doubt Contessa'
+            valid,card_to_deck=challenge(challenger,challenged,act_count,deck)
             if valid=='Not_Today':
-                return 'Not_Today'
+                return 'Today', card_to_deck ,deck
+            else:
+                return 'Not_Today',card_to_deck ,deck
         else:
-            return 'Not_Today'
+            return 'Not_Today',None ,deck
+
     if act == 'Foreign Aid' and card ==1:
         print(f'{challenged.name} your petition for foreign aid was cancelled by Duke')
         opt=str(input(f'Do you want to challenge {challenger.name}? Options: yes / no: '))
         if opt=='yes':
-            valid=challenge(challenger,challenged)
+            act_count='doubt Duke'
+            valid,card_to_deck=challenge(challenger,challenged,act_count,deck)
             if valid=='Not_Today':
-                return 'Not_Today'
-            
+                return 'Today', card_to_deck ,deck
+            else:
+                return 'Not_Today',card_to_deck ,deck
         else:
-            return 'Not_Today'
+            return 'Not_Today', None  ,deck  
+    
     if act == 'Steal' and card==2:
         print(f'{challenged.name} your attent for stealing was cancelled by Ambassador or Captian')
         opt=str(input(f'Do you want to challenge {challenger.name}? Options: yes / no: '))
         if opt=='yes':
-            valid=challenge(challenger,challenged)
+            act_count='doubt Ambassador or Captain'
+            valid,card_to_deck=challenge(challenger,challenged,act_count,deck)
             if valid=='Not_Today':
-                return 'Not_Today'
-            
+                return 'Today', card_to_deck ,deck
+            else:
+                return 'Not_Today',card_to_deck ,deck
         else:
-            return 'Not_Today'
+            return 'Not_Today', None ,deck
 
 
 def Coup(victim):
@@ -296,6 +406,7 @@ cards_reveals=[]
 while True:
     for k in range(num_player):
         plyer=total_players[k]
+        reveal=None
         print(f'----- Player{k+1} -----')
         print(f'Your cards are: {plyer.card1}   {plyer.card2}')
         # ACTIONS
@@ -313,7 +424,7 @@ while True:
                 else:
                     victim=str(input('Choose a player to coup (Ex: Player1): '))
                     reveal=Coup(victim)
-                    cards_reveals.append(reveal)
+                    
             
             elif act == 'Assassinate':
                 if plyer.coins<3:
@@ -322,24 +433,6 @@ while True:
                     victim1=str(input('Choose a player to assassinate (Ex: Player1): '))
                     reveal, pos_= kill(victim1)
             
-            elif act == 'Exchange':
-                c1 = deck[0]
-                c2 = deck[1]
-                deck.pop(0)
-                deck.pop(0)
-                numbers = [1,2,3,4]
-                print("Choose 2 cards between the ones you've got from the deck and the ones you had before: ")
-                tobechosen = [c1, c2, plyer.card1, plyer.card2]
-                print(f'1: {c1}, 2: {c2}, 3: {plyer.card1}, 4: {plyer.card2}')
-                chosen = str(input("Example: 1,3: "))
-                chosen = chosen.split(',')
-                plyer.card1 = tobechosen[int(chosen[0])-1]
-                plyer.card2 = tobechosen[int(chosen[1])-1]
-                numbers.pop(int(chosen[0])-1)
-                numbers.pop(int(chosen[1])-2)
-                deck.append(tobechosen[numbers[0]-1])
-                deck.append(tobechosen[numbers[1]-1])
-                random.shuffle(deck)
             
             elif act == 'Steal':
                 mugged = str(input('Choose a player to steal coins from (Ex: Player1): '))
@@ -349,7 +442,6 @@ while True:
             print('You have to Coup')
             victim=str(input('Choose a player to coup (Ex: Player1): '))
             reveal=Coup(victim)
-            cards_reveals.append(reveal)
             plus_min='take'
             value=7
         # ADD OR TAKE COINS
@@ -394,14 +486,64 @@ while True:
                 pp = p_action[pos]
                 print (f'---{pp.name}---')
                 print('Challenge')
-                #LLAMAR A LA FUNCIÓN CHALLENGE
+                works,card_to_deck, deck=challenge(plyer, pp,act,deck)
+                cards_reveals.append(card_to_deck)
+                if act=='Tax' and works=='Not_Today':
+                    plyer.coins-=3
+                elif act=='Assassinate' and works=='Not_Today':
+                    cancel_assassination(victim1,reveal,pos_)
+                    reveal=None
+                elif act=='Exchange' and works!='Not_Today':
+                    c1 = deck[0]
+                    c2 = deck[1]
+                    deck.pop(0)
+                    deck.pop(0)
+                    numbers = [1,2,3,4]
+                    print("Choose 2 cards between the ones you've got from the deck and the ones you had before: ")
+                    tobechosen = [c1, c2, plyer.card1, plyer.card2]
+                    print(f'1: {c1}, 2: {c2}, 3: {plyer.card1}, 4: {plyer.card2}')
+                    chosen = str(input("Example: 1,3: "))
+                    chosen = chosen.split(',')
+                    plyer.card1 = tobechosen[int(chosen[0])-1]
+                    plyer.card2 = tobechosen[int(chosen[1])-1]
+                    numbers.pop(int(chosen[0])-1)
+                    numbers.pop(int(chosen[1])-2)
+                    deck.append(tobechosen[numbers[0]-1])
+                    deck.append(tobechosen[numbers[1]-1])
+                    random.shuffle(deck)
+                
+                
             elif ch > 1:
                 ran = random.uniform(1,ch)
                 pos = do.index('Challenge',ran)
                 pp = p_action[pos]
                 print (f'---{pp.name}---')
                 print('Challenge')
-                #LLAMAR A LA FUNCIÓN CHALLENGE
+                works,card_to_deck,deck=challenge(plyer, ppact,deck)
+                cards_reveals.append(card_to_deck)
+                if act=='Tax' and works=='Not_Today':
+                    plyer.coins-=3
+                elif act=='Assassinate' and works=='Not_Today':
+                    cancel_assassination(victim1,reveal,pos_)
+                    reveal=None
+                elif act=='Exchange' and works!='Not_Today':
+                    c1 = deck[0]
+                    c2 = deck[1]
+                    deck.pop(0)
+                    deck.pop(0)
+                    numbers = [1,2,3,4]
+                    print("Choose 2 cards between the ones you've got from the deck and the ones you had before: ")
+                    tobechosen = [c1, c2, plyer.card1, plyer.card2]
+                    print(f'1: {c1}, 2: {c2}, 3: {plyer.card1}, 4: {plyer.card2}')
+                    chosen = str(input("Example: 1,3: "))
+                    chosen = chosen.split(',')
+                    plyer.card1 = tobechosen[int(chosen[0])-1]
+                    plyer.card2 = tobechosen[int(chosen[1])-1]
+                    numbers.pop(int(chosen[0])-1)
+                    numbers.pop(int(chosen[1])-2)
+                    deck.append(tobechosen[numbers[0]-1])
+                    deck.append(tobechosen[numbers[1]-1])
+                    random.shuffle(deck)
             
             if encounter == 1:
                 pos = do.index('Counteract')
@@ -409,7 +551,9 @@ while True:
                 print (f'---{pp.name}---')
                 print('Counteract')
                 count_=menu_counteract()
-                works=counteract(plyer,pp,count_,act)
+                works,card_to_deck,deck=counteract(plyer,pp,count_,act,deck)
+                if card_to_deck1==None:
+                    cards_reveals.append(card_to_deck)
                 if act=='Assassinate' and works=='Not_Today':
                     cancel_assassination(victim1,reveal,pos_)
                     reveal=None
@@ -417,22 +561,96 @@ while True:
                     cards_reveals.append(reveal)
                 elif act=='Foreign Aid' and works=='Not_Today':
                     value=0
+                elif act=='Exchange':
+                    c1 = deck[0]
+                    c2 = deck[1]
+                    deck.pop(0)
+                    deck.pop(0)
+                    numbers = [1,2,3,4]
+                    print("Choose 2 cards between the ones you've got from the deck and the ones you had before: ")
+                    tobechosen = [c1, c2, plyer.card1, plyer.card2]
+                    print(f'1: {c1}, 2: {c2}, 3: {plyer.card1}, 4: {plyer.card2}')
+                    chosen = str(input("Example: 1,3: "))
+                    chosen = chosen.split(',')
+                    plyer.card1 = tobechosen[int(chosen[0])-1]
+                    plyer.card2 = tobechosen[int(chosen[1])-1]
+                    numbers.pop(int(chosen[0])-1)
+                    numbers.pop(int(chosen[1])-2)
+                    deck.append(tobechosen[numbers[0]-1])
+                    deck.append(tobechosen[numbers[1]-1])
+                    random.shuffle(deck)
                 elif act=='Steal' and works=='Not_Today':
                     cancel_stealing(mugged, value)
                     plyer.coins -= value
-            
-                
+                  
             elif encounter > 1:
                 ran = random.uniform(1,ch)
                 pos = do.index('Counteract',ran)
                 pp = p_action[pos]
+                print (f'---{pp.name}---')
+                print('Counteract')
+                count_=menu_counteract()
+                works,card_to_deck,deck=counteract(plyer,pp,count_,act,deck)
+                if card_to_deck1==None:
+                    cards_reveals.append(card_to_deck)
+                if act=='Assassinate' and works=='Not_Today':
+                    cancel_assassination(victim1,reveal,pos_)
+                    reveal=None
+                elif act=='Assassinate' and works=='Today':
+                    cards_reveals.append(reveal)
+                elif act=='Foreign Aid' and works=='Not_Today':
+                    value=0
+                elif act=='Exchange':
+                    c1 = deck[0]
+                    c2 = deck[1]
+                    deck.pop(0)
+                    deck.pop(0)
+                    numbers = [1,2,3,4]
+                    print("Choose 2 cards between the ones you've got from the deck and the ones you had before: ")
+                    tobechosen = [c1, c2, plyer.card1, plyer.card2]
+                    print(f'1: {c1}, 2: {c2}, 3: {plyer.card1}, 4: {plyer.card2}')
+                    chosen = str(input("Example: 1,3: "))
+                    chosen = chosen.split(',')
+                    plyer.card1 = tobechosen[int(chosen[0])-1]
+                    plyer.card2 = tobechosen[int(chosen[1])-1]
+                    numbers.pop(int(chosen[0])-1)
+                    numbers.pop(int(chosen[1])-2)
+                    deck.append(tobechosen[numbers[0]-1])
+                    deck.append(tobechosen[numbers[1]-1])
+                    random.shuffle(deck)
+                elif act=='Steal' and works=='Not_Today':
+                    cancel_stealing(mugged, value)
+                    plyer.coins -= value
                 
+
+        elif act=='Exchange':
+            c1 = deck[0]
+            c2 = deck[1]
+            deck.pop(0)
+            deck.pop(0)
+            numbers = [1,2,3,4]
+            print("Choose 2 cards between the ones you've got from the deck and the ones you had before: ")
+            tobechosen = [c1, c2, plyer.card1, plyer.card2]
+            print(f'1: {c1}, 2: {c2}, 3: {plyer.card1}, 4: {plyer.card2}')
+            chosen = str(input("Example: 1,3: "))
+            chosen = chosen.split(',')
+            plyer.card1 = tobechosen[int(chosen[0])-1]
+            plyer.card2 = tobechosen[int(chosen[1])-1]
+            numbers.pop(int(chosen[0])-1)
+            numbers.pop(int(chosen[1])-2)
+            deck.append(tobechosen[numbers[0]-1])
+            deck.append(tobechosen[numbers[1]-1])
+            random.shuffle(deck)
             
 
+        if reveal!=None:
+            cards_reveals.append(reveal)
 
+        print('nombre: ',Player1.name,' card1: ',Player1.card1,' card2: ',Player1.card2,' coins: ',Player1.coins)
         print('nombre: ',Player2.name,' card1: ',Player2.card1,' card2: ',Player2.card2,' coins: ',Player2.coins)
         print(cards_reveals)
         print(plyer.coins)
+        random.shuffle(deck)
         break
     
     

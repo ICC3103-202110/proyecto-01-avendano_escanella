@@ -36,7 +36,7 @@ class Game:
             return 'Coup',7,'take'
         elif self.action == 5:
             #Duke
-            return None,3,'add'
+            return 'Tax',3,'add'
         elif self.action == 6:
             #Assassinate
             return 'Assassinate',3,'take'
