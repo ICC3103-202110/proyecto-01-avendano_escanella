@@ -16,7 +16,7 @@ def create_players (deck,i):
     deck.pop(0)
     ply=f'Player{i}'
     player_=Player(ply,card1,card2,None,None,7)
-    return player_,deck
+    return player_
 
 def menu_selection():
     print("\nSelect one of the following actions: ")
@@ -173,26 +173,27 @@ def game():
     total_players=[]
     nara=['None','None']
     if num_player==3:
-        Player1,deck=create_players(deck,1)
-        Player2,deck=create_players(deck,2)
-        Player3,deck=create_players(deck,3)
-        Player4,deck=create_players(nara,4)
+        Player1=create_players(deck,1)
+        Player2=create_players(deck,2)
+        Player3=create_players(deck,3)
+        Player4=create_players(nara,4)
         total_players.append(Player1)
         total_players.append(Player2)
         total_players.append(Player3)
 
     else:
-        Player1,deck=create_players(deck,1)
-        Player2,deck=create_players(deck,2)
-        Player3,deck=create_players(deck,3)
-        Player4,deck=create_players(deck,4)
+        Player1=create_players(deck,1)
+        Player2=create_players(deck,2)
+        Player3=create_players(deck,3)
+        Player4=create_players(deck,4)
         total_players.append(Player1)
         total_players.append(Player2)
         total_players.append(Player3)
         total_players.append(Player4)
 
+
     round_=1
-    cards_reveals=[]
+
 
     while True:
         for k in range(num_player):
@@ -214,7 +215,8 @@ def game():
                         other_players.pop(k)
                         p_action = []
                         do = []
-
+                        if menu1==6:
+                            victim_to_kill=str(input('Choose a player to assassinate (Ex: Player1): '))
                         # COUNTERACT / CHALLENGE / NOTHING
                         for y in range(len(other_players)):
                             if other_players[y].card1==None and other_players[y].card2==None:
@@ -253,7 +255,7 @@ def game():
                                 print (f'---{pp.name}---')
                                 print('Challenge')
                                 works,card_to_deck,deck=challenge(plyer, ppact,deck)
-                                cards_reveals.append(card_to_deck)
+                                #cards_reveals.append(card_to_deck)
                                 if act=='Tax' and works=='Not_Today':
                                     plyer.coins-=3
                                 elif act=='Assassinate' and works=='Not_Today':
@@ -317,11 +319,30 @@ def game():
                         elif menu1 == 5 and value != 'Not_Today':
                             Game.action_tax(plyer)
                         elif menu1 == 6 and value != 'Not_Today':
-                            Assassin.action_assassinate(plyer)
+                            if plyer.coins >=3:
+                                if victim_to_kill == Player1.name:
+                                    Game.action_assassinate(Player1,plyer)
+                                elif victim_to_kill == Player2.name:
+                                    Game.action_assassinate(Player2,plyer)
+                                elif victim_to_kill == Player3.name:
+                                    Game.action_assassinate(Player3,plyer)
+                                elif victim_to_kill == Player4.name:
+                                    Game.action_assassinate(Player4,plyer)
+                            else:
+                                print(f'You can´t assassinate because you have ¢{plyer.coins} coins')
                         elif menu1 == 7 and value != 'Not_Today':
-                            deck=Ambassador.action_exchange(deck, plyer)
+                            deck=Game.action_exchange(plyer,deck)
                         elif menu1 == 8 and value != 'Not_Today':
-                            Captain.action_steal(plyer)
+                            mugged = str(input('Choose a player to steal coins from (Ex: Player1): '))
+                            if mugged == Player1.name:
+                                Game.action_steal(Player1,plyer)
+                            elif mugged == Player2.name:
+                                Game.action_steal(Player2,plyer)
+                            elif mugged == Player3.name:
+                                Game.action_steal(Player3,plyer)
+                            elif mugged == Player4.name:
+                                Game.action_steal(Player4,plyer)
+
                         else:
                             print('Your action isn`t valid')
 
@@ -361,7 +382,7 @@ def game():
                 print('nombre: ',Player1.name,' card1: ',Player1.card1,' card2: ',Player1.card2,' coins: ',Player1.coins)
                 print('nombre: ',Player2.name,' card1: ',Player2.card1,' card2: ',Player2.card2,' coins: ',Player2.coins)
                 print('nombre: ',Player3.name,' card1: ',Player3.card1,' card2: ',Player3.card2,' coins: ',Player3.coins)
-                print(cards_reveals)
+                
                 print(plyer.coins)
                 random.shuffle(deck)
                 break

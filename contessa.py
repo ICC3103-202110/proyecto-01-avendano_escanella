@@ -1,5 +1,5 @@
 from influences import Influences
-from player import Player
+
 
 class Contessa(Influences,Player):
     def __init__(self, name):
