@@ -1,48 +1,39 @@
+from player import Player
+from influences import Influences
+from duke import Duke
+from assassin import Assassin
+from ambassador import Ambassador
+from captain import Captain
+from contessa import Contessa
 
-class Game:
-    #Constantes -> MAYUSCULA
+class Game ():
+    #Métodos
+
+    def action_income(player):
+        player.coins+= 1
     
-    #Constructor
-    def __init__(self,round_,player,action):
-            self.__round_=round_
-            self.__player=player
-            self.__action=action
+    def action_FA(player):
+        player.coins += 2
     
+    def action_Coup(victim):
+        print(victim.name)
+        print(f'1: {victim.card1} or 2: {victim.card2}')
+        card_reveal=int(input())
+        if card_reveal==1 and victim.card1 != None:
+            reveal= victim.card1
+            victim.card1=None
+            victim.card1_reveal=reveal
+        elif card_reveal==2 and victim.card2 != None:
+            reveal= victim.card2
+            victim.card2=None
+            victim.card2_reveal=reveal
+        elif victim.card1==None and victim.card2==None:
+            print('This player has already lost')
+        else:
+            print('You can`t choose that card')
+            Game.action_Coup(victim)
 
-    # Getter y Setters
-    @property
-    def round_(self):
-        return self.__round_
-        
-    @property
-    def player(self):
-        return self.__player
-
-    @property
-    def action(self):
-        return self.__action
-
-  
-    #Metodos
-    def do_action(self):
-        if self.action == 1:
-            #INCOME
-            return None,1,'add'
-        elif self.action == 2:
-            #Foreign Aid
-            return "Foreign Aid",2,'add'
-        elif self.action == 3:
-            #Coup
-            return 'Coup',7,'take'
-        elif self.action == 5:
-            #Duke
-            return 'Tax',3,'add'
-        elif self.action == 6:
-            #Assassinate
-            return 'Assassinate',3,'take'
-        elif self.action == 7:
-            #Exchange
-            return 'Exchange',None,None
-        elif self.action == 8:
-            #Steal
-            return 'Steal',2,'add'
+    def action_tax(player):
+        value=(Duke.tax())
+        player.coins += value
+    
