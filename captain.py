@@ -1,9 +1,9 @@
 from influences import Influences
+from player import Player
+from challenge import Challenge
 
-
-class Captain(Influences,Player):
-    MIN_COIN=1
-    MAX_COINS=2
+class Captain(Influences):
+    
     def __init__(self, name):
         super(Captain,self).__init__(name)
 
@@ -16,10 +16,11 @@ class Captain(Influences,Player):
         return value
 
         
-    def counteract_stealing(blocker,player):
-        print(f'{player.name} your attent for stealing was cancelled by Captian')
-        opt=str(input(f'Do you want to challenge {blocked.name}? Options: yes / no: '))
+    def counteract_stealing(blocker,player,deck):
+        print(f'{player.name} your attent for stealing was cancelled by Captain')
+        opt=str(input(f'Do you want to challenge {blocker.name}? Options: yes / no: '))
         if opt=='yes':
-            print('Tamos trabajando en ello')
+            valid,deck=Challenge.challenge_counteraction(player, blocker,'Captain',deck)
+            return valid,deck
         else:
-            return 'Not_Today'
+            return 'Not_Today',deck

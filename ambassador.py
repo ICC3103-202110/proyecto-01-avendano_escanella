@@ -1,6 +1,7 @@
 from influences import Influences
 from player import Player
 import random
+from challenge import Challenge
 
 class Ambassador(Influences,Player):
     def __init__(self, name):
@@ -52,10 +53,11 @@ class Ambassador(Influences,Player):
             deck.append(tobechosen[numbers[1]-1])
             return deck
             
-    def counteract_stealing(blocker,player):
+    def counteract_stealing(blocker,player,deck):
         print(f'{player.name} your attent for stealing was cancelled by Ambassador')
-        opt=str(input(f'Do you want to challenge {blocked.name}? Options: yes / no: '))
+        opt=str(input(f'Do you want to challenge {blocker.name}? Options: yes / no: '))
         if opt=='yes':
-            print('Tamos trabajando en ello')
+            valid,deck=Challenge.challenge_counteraction(player, blocker,'Ambassador',deck)
+            return valid,deck
         else:
-            return 'Not_Today'
+            return 'Not_Today',deck

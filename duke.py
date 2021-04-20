@@ -1,5 +1,7 @@
 from influences import Influences
 from player import Player
+from challenge import Challenge
+
 class Duke (Influences):
 
     #Constructor
@@ -12,11 +14,12 @@ class Duke (Influences):
         return value
 
     
-    def counteract_FA(blocker,player):
+    def counteract_FA(blocker,player,deck):
         print(f'{player.name} your petition for foreign aid was cancelled by Duke')
-        opt=str(input(f'Do you want to challenge {blocked.name}? Options: yes / no: '))
+        opt=str(input(f'Do you want to challenge {blocker.name}? Options: yes / no: '))
         if opt=='yes':
-            print('Tamos trabajando en ello')
+            valid,deck=Challenge.challenge_counteraction(player, blocker,'Duke',deck)
+            return valid,deck
         else:
-            return 'Not_Today'
+            return 'Not_Today',deck
 
