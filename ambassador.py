@@ -31,24 +31,23 @@ class Ambassador(Influences,Player):
         d2 = deck[1]
         deck.pop(0)
         deck.pop(0)
-        deck.pop(0)
         numbers = [1,2,3]
         print("Choose 1 card between the ones you've got from the deck and the one you had before: ")
         if player.card1 != None:
-            tobechosen = [d1, player.card1]
+            tobechosen = [d1, d2, player.card1]
             print(f'1: {d1}, 2:{d2}, 3: {player.card1}')
-            chosen = str(input("Example (2): "))
-            player.card1 = tobechosen[int(chosen[0])-1]
-            numbers.pop(int(chosen - 1))
+            chosen = int(input("Example (2): "))
+            player.card1 = tobechosen[chosen-1]
+            numbers.pop(chosen - 1)
             deck.append(tobechosen[numbers[0]-1])
             deck.append(tobechosen[numbers[1]-1])
             return deck
         else:
-            tobechosen = [d1, plyer.card2]
+            tobechosen = [d1, d2, player.card2]
             print(f'1: {d1}, 2:{d2}, 3: {player.card2}')
-            chosen = str(input("Example (2): "))
-            player.card2 = tobechosen[int(chosen[0])-1]
-            numbers.pop(int(chosen - 1))
+            chosen = int(input("Example (2): "))
+            player.card2 = tobechosen[chosen-1]
+            numbers.pop(chosen - 1)
             deck.append(tobechosen[numbers[0]-1])
             deck.append(tobechosen[numbers[1]-1])
             return deck

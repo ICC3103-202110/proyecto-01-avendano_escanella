@@ -80,6 +80,7 @@ def boardfor3(Player1, Player2, Player3):
     p3r1,p3r2 = value_reveal_card(Player3)
     p2c1,p2c2 = value_print_card(Player2)
     p3c1,p3c2 = value_print_card(Player3)
+    print()
     print("•                             ••••••••••••BOARD••••••••••••                     ")
     print("•")
     print(f"•            ¢{Player2.coins} {Player2.name} [{p2c1}] [{p2c2}]                 ¢{Player3.coins} {Player3.name} [{p3c1}] [{p3c2}]") 
@@ -97,6 +98,7 @@ def boardfor4(Player1, Player2, Player3,Player4):
     p2c1,p2c2 = value_print_card(Player2)
     p3c1,p3c2 = value_print_card(Player3)
     p4c1,p4c2 = value_print_card(Player4)
+    print()
     print("•                                ••••••••••••BOARD••••••••••••                     ")
     print("•")
     print(f"•                             ¢{Player3.coins} {Player3.name} [{Player3.card1}] [{Player3.card2}]          ")
@@ -153,7 +155,8 @@ def gameplay():
     while True:
         for k in range(num_player):
             plyer=total_players[k]
-            print(f'----- Player{k+1} -----')
+            print()
+            print(f'----- Player{k+1} it´s your turn -----')
             if plyer.card1 == None and plyer.card2 == None:
                 print('You have lost')
     
@@ -225,6 +228,7 @@ def gameplay():
                                 pp = p_action[pos]
                                 print (f'---{pp.name}---')
                                 print('Challenge')
+                                print(f'{pp.name} is challenging {plyer.name}')
                                 valid,deck=Challenge.challenge_actions(pp,plyer, menu1, deck)
                             elif ch > 1:
                                 ran = int(random.uniform(1,ch))
@@ -235,6 +239,7 @@ def gameplay():
                                 pp = p_action[0]
                                 print (f'---{pp.name}---')
                                 print('Challenge')
+                                print(f'{pp.name} is challenging {plyer.name}')
                                 valid,deck=Challenge.challenge_actions(pp,plyer, menu1, deck)
                             
                             if encounter == 1 and valid != "Not_Today":
@@ -243,6 +248,7 @@ def gameplay():
                                 print()
                                 print (f'---{pp.name}---')
                                 print('Counteract')
+                                print(f'{pp.name} is counteracting {plyer.name}')
                                 count_=menu_counteract()
                                 if count_ == 1:
                                     valid,deck=Duke.counteract_FA(pp,plyer,deck)
@@ -263,6 +269,7 @@ def gameplay():
                                 pp = p_action[0]
                                 print (f'---{pp.name}---')
                                 print('Counteract')
+                                print(f'{pp.name} is counteracting {plyer.name}')
                                 count_=menu_counteract()
                                 if count_ == 1:
                                     valid,deck=Duke.counteract_FA(pp,plyer,deck)
@@ -354,12 +361,7 @@ def gameplay():
                         Game.action_Coup(Player3)
                     elif victim == Player4.name and victim != plyer.name:
                         Game.action_Coup(Player4)
-                
-                print('nombre: ',Player1.name,' card1: ',Player1.card1,' card2: ',Player1.card2,' coins: ',Player1.coins)
-                print('nombre: ',Player2.name,' card1: ',Player2.card1,' card2: ',Player2.card2,' coins: ',Player2.coins)
-                print('nombre: ',Player3.name,' card1: ',Player3.card1,' card2: ',Player3.card2,' coins: ',Player3.coins)
-                print('nombre: ',Player4.name,' card1: ',Player4.card1,' card2: ',Player4.card2,' coins: ',Player4.coins)
-                
+    
                 if num_player ==3:
                     if plyer.name == Player1.name:
                         boardfor3(Player1,Player2,Player3)
@@ -379,13 +381,21 @@ def gameplay():
                 
                 
                 random.shuffle(deck)
-                break
-            
+
         Game.lose(Player1,Player2,Player3,Player4)
+        losers = 0
+        for k in range(num_player):
+            pl = total_players[k]
+            if pl.card1 == None and pl.card2 == None:
+                losers +=1
+        if losers+1 == num_player:
+            for k in range(num_player):
+                pl = total_players[k]
+                if pl.card1 != None or pl.card2 != None:
+                    print(f"{pl.name} you have won the game. You have exiliated everyone!")
+                    print("Congratulations! ☺")
+            break
         round_+=1
-        break
-
-
 
 
 if __name__ == "__main__":

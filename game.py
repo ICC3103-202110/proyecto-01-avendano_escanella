@@ -16,7 +16,7 @@ class Game ():
         player.coins += 2
     
     def action_Coup(victim):
-        print(victim.name)
+        print(f'{victim.name} you are being Couped')
         print(f'1: {victim.card1} or 2: {victim.card2}')
         card_reveal=int(input())
         if card_reveal==1 and victim.card1 != None:
