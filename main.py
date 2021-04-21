@@ -50,8 +50,66 @@ def menu_counteract():
     print('4. CONTESSA: Blocks assassination')
     return int(input())
 
+def value_print_card(player):
+    if player.card1 == None:
+        value_c1 = "X"
+    else:
+        value_c1 = "◘"
+    
+    if player.card2 == None:
+        value_c2 = "X"
+    else:
+        value_c2 = "◘"
+    return value_c1,value_c2
 
-def game():
+def value_reveal_card(player1):
+    if player1.card1 == None:
+        value_c1 = player1.card1_reveal
+    else:
+        value_c1 = " "
+    
+    if player1.card2 == None:
+        value_c2 = player1.card2_reveal
+    else:
+        value_c2 = " "
+    return value_c1,value_c2
+
+def boardfor3(Player1, Player2, Player3):
+    p1r1,p1r2 = value_reveal_card(Player1)
+    p2r1,p2r2 = value_reveal_card(Player2)
+    p3r1,p3r2 = value_reveal_card(Player3)
+    p2c1,p2c2 = value_print_card(Player2)
+    p3c1,p3c2 = value_print_card(Player3)
+    print("•                             ••••••••••••BOARD••••••••••••                     ")
+    print("•")
+    print(f"•            ¢{Player2.coins} {Player2.name} [{p2c1}] [{p2c2}]                 ¢{Player3.coins} {Player3.name} [{p3c1}] [{p3c2}]") 
+    print(f"•                    [{p2r1}]  [{p2r2}]                          [{p3r1}]  [{p3r2}]")
+    print("•")
+    print(f"•                                           [{p1r1}]      [{p1r2}]  ")
+    print(f"•                             ¢{Player1.coins} {Player1.name} [{Player1.card1}] [{Player1.card2}]          ")
+    print("•                             •••••••••••••••••••••••••••••                     ")
+
+def boardfor4(Player1, Player2, Player3,Player4):
+    p1r1,p1r2 = value_reveal_card(Player1)
+    p2r1,p2r2 = value_reveal_card(Player2)
+    p3r1,p3r2 = value_reveal_card(Player3)
+    p4r1,p4r2 = value_reveal_card(Player4)
+    p2c1,p2c2 = value_print_card(Player2)
+    p3c1,p3c2 = value_print_card(Player3)
+    p4c1,p4c2 = value_print_card(Player4)
+    print("•                                ••••••••••••BOARD••••••••••••                     ")
+    print("•")
+    print(f"•                             ¢{Player3.coins} {Player3.name} [{Player3.card1}] [{Player3.card2}]          ")
+    print(f"•                                           [{p3r1}]      [{p3r2}]  ")
+    print("•")
+    print(f"•            ¢{Player2.coins} {Player2.name} [{p2c1}] [{p2c2}]                                  ¢{Player4.coins} {Player4.name} [{p4c1}] [{p4c2}]") 
+    print(f"•                    [{p2r1}]  [{p2r2}]                                          [{p4r1}]  [{p4r2}]")
+    print("•")
+    print(f"•                                           [{p1r1}]      [{p1r2}]  ")
+    print(f"•                             ¢{Player1.coins} {Player1.name} [{Player1.card1}] [{Player1.card2}]          ")
+    print("•                                •••••••••••••••••••••••••••••                     ")
+
+def gameplay():
     deck=['Duke','Duke','Duke','Assassin','Assassin','Assassin','Ambassador','Ambassador','Ambassador',
         'Captain','Captain','Captain','Contessa','Contessa','Contessa']
     random.shuffle(deck)
@@ -101,6 +159,22 @@ def game():
     
 
             else:
+                if num_player ==3:
+                    if plyer.name == Player1.name:
+                        boardfor3(Player1,Player2,Player3)
+                    elif plyer.name == Player2.name:
+                        boardfor3(Player2,Player3,Player1)
+                    elif plyer.name == Player3.name:
+                        boardfor3(Player3,Player1,Player2)
+                else:
+                    if plyer.name == Player1.name:
+                        boardfor4(Player1,Player2,Player3,Player4)
+                    elif plyer.name == Player2.name:
+                        boardfor4(Player2,Player3,Player4,Player1)
+                    elif plyer.name == Player3.name:
+                        boardfor4(Player3,Player4,Player1,Player2)
+                    elif plyer.name == Player4.name:
+                        boardfor4(Player4,Player1,Player2,Player3)
                 valid='Today'
                 print(f'Your cards are: {plyer.card1}   {plyer.card2}')
                 # ACTION
@@ -116,11 +190,15 @@ def game():
                         do = []
                         if menu1==6:
                             victim_to_kill=str(input('Choose a player to assassinate (Ex: Player1): '))
+                            if victim_to_kill == plyer.name:
+                                print("You can´t kill yourself")
+                                victim_to_kill=str(input('Choose a player to assassinate (Ex: Player1): '))
+                                if victim_to_kill == plyer.name:
+                                    print("We have already told you, you can NOT kill yourself.")
                         # COUNTERACT / CHALLENGE / NOTHING
                         for y in range(len(other_players)):
                             if other_players[y].card1==None and other_players[y].card2==None:
-                                #ACA METER LA FUNCION DE PERDIÓ
-                                continue
+                                Game.lose(Player1,Player2,Player3,Player4)
                     
                             else:
                                 print(f'---{other_players[y].name}---')
@@ -159,7 +237,7 @@ def game():
                                 print('Challenge')
                                 valid,deck=Challenge.challenge_actions(pp,plyer, menu1, deck)
                             
-                            if encounter == 1:
+                            if encounter == 1 and valid != "Not_Today":
                                 pos = do.index('Counteract')
                                 pp = p_action[pos]
                                 print()
@@ -174,6 +252,7 @@ def game():
                                     valid,deck=Captain.counteract_stealing(pp, plyer,deck)
                                 elif count_ == 4:
                                     valid,deck=Contessa.counteract_assassin(pp, plyer,deck)
+                                
 
                             elif encounter > 1:
                                 ran = int(random.uniform(1,encounter))
@@ -203,13 +282,13 @@ def game():
                             Game.action_tax(plyer)
                         elif menu1 == 6 and valid != 'Not_Today':
                             if plyer.coins >=3:
-                                if victim_to_kill == Player1.name:
+                                if victim_to_kill == Player1.name and victim_to_kill != plyer.name:
                                     Game.action_assassinate(Player1,plyer)
-                                elif victim_to_kill == Player2.name:
+                                elif victim_to_kill == Player2.name and victim_to_kill != plyer.name:
                                     Game.action_assassinate(Player2,plyer)
-                                elif victim_to_kill == Player3.name:
+                                elif victim_to_kill == Player3.name and victim_to_kill != plyer.name:
                                     Game.action_assassinate(Player3,plyer)
-                                elif victim_to_kill == Player4.name:
+                                elif victim_to_kill == Player4.name and victim_to_kill != plyer.name:
                                     Game.action_assassinate(Player4,plyer)
                             else:
                                 print(f'You can´t assassinate because you have ¢{plyer.coins} coins')
@@ -217,13 +296,19 @@ def game():
                             deck=Game.action_exchange(plyer,deck)
                         elif menu1 == 8 and valid != 'Not_Today':
                             mugged = str(input('Choose a player to steal coins from (Ex: Player1): '))
-                            if mugged == Player1.name:
+                            if mugged == plyer.name:
+                                print("You can´t steal coins from yourself.")
+                                mugged = str(input('Choose a player to steal coins from (Ex: Player1): '))
+                                if mugged == plyer.name:
+                                    print("We have already told you, you can NOT steal coins from yourself.")
+
+                            if mugged == Player1.name and mugged != plyer.name:
                                 Game.action_steal(Player1,plyer)
-                            elif mugged == Player2.name:
+                            elif mugged == Player2.name and mugged != plyer.name:
                                 Game.action_steal(Player2,plyer)
-                            elif mugged == Player3.name:
+                            elif mugged == Player3.name and mugged != plyer.name:
                                 Game.action_steal(Player3,plyer)
-                            elif mugged == Player4.name:
+                            elif mugged == Player4.name and mugged != plyer.name:
                                 Game.action_steal(Player4,plyer)
                         
 
@@ -237,13 +322,18 @@ def game():
                             if plyer.coins>=7:
                                 plyer.coins-=7
                                 victim=str(input('Choose a player to coup (Ex: Player1): '))
-                                if victim == Player1.name:
+                                if victim == plyer.name:
+                                    print("You can´t Coup yourself.")
+                                    victim=str(input('Choose a player to coup (Ex: Player1): '))
+                                    if victim == plyer.name:
+                                        print("We have already told you, you can NOT Coup yourself.")
+                                if victim == Player1.name and victim != plyer.name:
                                     Game.action_Coup(Player1)
-                                elif victim == Player2.name:
+                                elif victim == Player2.name and victim != plyer.name:
                                     Game.action_Coup(Player2)
-                                elif victim == Player3.name:
+                                elif victim == Player3.name and victim != plyer.name:
                                     Game.action_Coup(Player3)
-                                elif victim == Player4.name:
+                                elif victim == Player4.name and victim != plyer.name:
                                     Game.action_Coup(Player4)
                             else:
                                 print(f'You can´t coup because you have ¢{plyer.coins} coins')
@@ -251,13 +341,18 @@ def game():
                     print('You have to coup')
                     plyer.coins-=7
                     victim=str(input('Choose a player to coup (Ex: Player1): '))
-                    if victim == Player1.name:
+                    if victim == plyer.name:
+                        print("You can´t Coup yourself.")
+                        victim=str(input('Choose a player to coup (Ex: Player1): '))
+                        if victim == plyer.name:
+                            print("We have already told you, you can NOT Coup yourself.")
+                    if victim == Player1.name and victim != plyer.name:
                         Game.action_Coup(Player1)
-                    elif victim == Player2.name:
+                    elif victim == Player2.name and victim != plyer.name:
                         Game.action_Coup(Player2)
-                    elif victim == Player3.name:
+                    elif victim == Player3.name and victim != plyer.name:
                         Game.action_Coup(Player3)
-                    elif victim == Player4.name:
+                    elif victim == Player4.name and victim != plyer.name:
                         Game.action_Coup(Player4)
                 
                 print('nombre: ',Player1.name,' card1: ',Player1.card1,' card2: ',Player1.card2,' coins: ',Player1.coins)
@@ -265,12 +360,33 @@ def game():
                 print('nombre: ',Player3.name,' card1: ',Player3.card1,' card2: ',Player3.card2,' coins: ',Player3.coins)
                 print('nombre: ',Player4.name,' card1: ',Player4.card1,' card2: ',Player4.card2,' coins: ',Player4.coins)
                 
+                if num_player ==3:
+                    if plyer.name == Player1.name:
+                        boardfor3(Player1,Player2,Player3)
+                    elif plyer.name == Player2.name:
+                        boardfor3(Player2,Player3,Player1)
+                    elif plyer.name == Player3.name:
+                        boardfor3(Player3,Player1,Player2)
+                else:
+                    if plyer.name == Player1.name:
+                        boardfor4(Player1,Player2,Player3,Player4)
+                    elif plyer.name == Player2.name:
+                        boardfor4(Player2,Player3,Player4,Player1)
+                    elif plyer.name == Player3.name:
+                        boardfor4(Player3,Player4,Player1,Player2)
+                    elif plyer.name == Player4.name:
+                        boardfor4(Player4,Player1,Player2,Player3)
+                
+                
                 random.shuffle(deck)
                 break
             
-        
+        Game.lose(Player1,Player2,Player3,Player4)
         round_+=1
         break
 
+
+
+
 if __name__ == "__main__":
-    game()
+    gameplay()

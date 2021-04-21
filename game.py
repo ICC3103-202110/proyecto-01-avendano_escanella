@@ -40,6 +40,7 @@ class Game ():
     def action_assassinate(victim,player):
         value=Assassin.assassinate()
         player.coins += value
+        print(f'{victim.name}, {player.name} has decided to assassinate you.')
         print(victim.name)
         print(f'1: {victim.card1} or 2: {victim.card2}')
         card_reveal=int(input())
@@ -78,3 +79,14 @@ class Game ():
             value= Captain.steal_2()
             victim.coins-=value
             player.coins+=value
+    
+    def lose(Player1, Player2, Player3, Player4):
+        if Player1.card1 == None and Player1.card2 == None:
+            Player1.coins = 0
+        elif Player2.card1 == None and Player2.card2 == None:
+            Player2.coins = 0
+        elif Player3.card1 == None and Player3.card2 == None:
+            Player3.coins = 0
+        elif Player4.card1 == None and Player4.card2 == None:
+            Player4.coins = 0
+        
