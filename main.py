@@ -75,6 +75,14 @@ def value_reveal_card(player1):
     return value_c1,value_c2
 
 def boardfor3(Player1, Player2, Player3):
+    if Player1.card1==None:
+        p1c1="X"
+    else:
+        p1c1= Player1.card1
+    if Player1.card2==None:
+        p1c2="X"
+    else:
+        p1c2= Player1.card2
     p1r1,p1r2 = value_reveal_card(Player1)
     p2r1,p2r2 = value_reveal_card(Player2)
     p3r1,p3r2 = value_reveal_card(Player3)
@@ -84,13 +92,21 @@ def boardfor3(Player1, Player2, Player3):
     print("•                             ••••••••••••BOARD••••••••••••                     ")
     print("•")
     print(f"•            ¢{Player2.coins} {Player2.name} [{p2c1}] [{p2c2}]                 ¢{Player3.coins} {Player3.name} [{p3c1}] [{p3c2}]") 
-    print(f"•                    [{p2r1}]  [{p2r2}]                          [{p3r1}]  [{p3r2}]")
+    print(f"•                 [{p2r1}] [{p2r2}]                          [{p3r1}] [{p3r2}]")
     print("•")
-    print(f"•                                           [{p1r1}]      [{p1r2}]  ")
-    print(f"•                             ¢{Player1.coins} {Player1.name} [{Player1.card1}] [{Player1.card2}]          ")
+    print(f"•                                     [{p1r1}]      [{p1r2}]  ")
+    print(f"•                             ¢{Player1.coins} {Player1.name} [{p1c1}] [{p1c2}]          ")
     print("•                             •••••••••••••••••••••••••••••                     ")
 
 def boardfor4(Player1, Player2, Player3,Player4):
+    if Player1.card1==None:
+        p1c1="X"
+    else:
+        p1c1= Player1.card1
+    if Player1.card2==None:
+        p1c2="X"
+    else:
+        p1c2= Player1.card2
     p1r1,p1r2 = value_reveal_card(Player1)
     p2r1,p2r2 = value_reveal_card(Player2)
     p3r1,p3r2 = value_reveal_card(Player3)
@@ -101,14 +117,14 @@ def boardfor4(Player1, Player2, Player3,Player4):
     print()
     print("•                                ••••••••••••BOARD••••••••••••                     ")
     print("•")
-    print(f"•                             ¢{Player3.coins} {Player3.name} [{Player3.card1}] [{Player3.card2}]          ")
+    print(f"•                                      ¢{Player3.coins} {Player3.name} [{p3c1}] [{p3c2}]          ")
     print(f"•                                           [{p3r1}]      [{p3r2}]  ")
     print("•")
     print(f"•            ¢{Player2.coins} {Player2.name} [{p2c1}] [{p2c2}]                                  ¢{Player4.coins} {Player4.name} [{p4c1}] [{p4c2}]") 
-    print(f"•                    [{p2r1}]  [{p2r2}]                                          [{p4r1}]  [{p4r2}]")
+    print(f"•             [{p2r1}] [{p2r2}]                                              [{p4r1}] [{p4r2}]")
     print("•")
     print(f"•                                           [{p1r1}]      [{p1r2}]  ")
-    print(f"•                             ¢{Player1.coins} {Player1.name} [{Player1.card1}] [{Player1.card2}]          ")
+    print(f"•                               ¢{Player1.coins} {Player1.name} [{p1c1}] [{p1c2}]          ")
     print("•                                •••••••••••••••••••••••••••••                     ")
 
 def gameplay():
@@ -222,25 +238,28 @@ def gameplay():
                                     encounter += 1
                                 elif do[j] == 'Challenge':
                                     ch += 1
-                            
-                            if ch == 1:
-                                pos = do.index('Challenge')
-                                pp = p_action[pos]
-                                print (f'---{pp.name}---')
-                                print('Challenge')
-                                print(f'{pp.name} is challenging {plyer.name}')
-                                valid,deck=Challenge.challenge_actions(pp,plyer, menu1, deck)
-                            elif ch > 1:
-                                ran = int(random.uniform(1,ch))
-                                print(ran)
-                                for j in range(ran):
-                                    do.pop(0)
-                                    p_action.pop(0)
-                                pp = p_action[0]
-                                print (f'---{pp.name}---')
-                                print('Challenge')
-                                print(f'{pp.name} is challenging {plyer.name}')
-                                valid,deck=Challenge.challenge_actions(pp,plyer, menu1, deck)
+                            if menu1==2:
+                                
+                                print('You can`t challenge this action')
+                            else:
+                                if ch == 1:
+                                    pos = do.index('Challenge')
+                                    pp = p_action[pos]
+                                    print (f'---{pp.name}---')
+                                    print('Challenge')
+                                    print(f'{pp.name} is challenging {plyer.name}')
+                                    valid,deck=Challenge.challenge_actions(pp,plyer, menu1, deck)
+                                elif ch > 1:
+                                    ran = int(random.uniform(1,ch))
+                                    print(ran)
+                                    for j in range(ran):
+                                        do.pop(0)
+                                        p_action.pop(0)
+                                    pp = p_action[0]
+                                    print (f'---{pp.name}---')
+                                    print('Challenge')
+                                    print(f'{pp.name} is challenging {plyer.name}')
+                                    valid,deck=Challenge.challenge_actions(pp,plyer, menu1, deck)
                             
                             if encounter == 1 and valid != "Not_Today":
                                 pos = do.index('Counteract')
@@ -322,7 +341,7 @@ def gameplay():
 
                      #DO ACTION 2
                     else:
-                
+                        
                         if menu1==1:
                             Game.action_income(plyer)
                         elif menu1==3:
@@ -361,7 +380,7 @@ def gameplay():
                         Game.action_Coup(Player3)
                     elif victim == Player4.name and victim != plyer.name:
                         Game.action_Coup(Player4)
-    
+                Game.lose(Player1,Player2,Player3,Player4)
                 if num_player ==3:
                     if plyer.name == Player1.name:
                         boardfor3(Player1,Player2,Player3)
@@ -382,18 +401,21 @@ def gameplay():
                 
                 random.shuffle(deck)
 
-        Game.lose(Player1,Player2,Player3,Player4)
-        losers = 0
-        for k in range(num_player):
-            pl = total_players[k]
-            if pl.card1 == None and pl.card2 == None:
-                losers +=1
-        if losers+1 == num_player:
+            Game.lose(Player1,Player2,Player3,Player4)
+            losers = 0
             for k in range(num_player):
                 pl = total_players[k]
-                if pl.card1 != None or pl.card2 != None:
-                    print(f"{pl.name} you have won the game. You have exiliated everyone!")
-                    print("Congratulations! ☺")
+                if pl.card1 == None and pl.card2 == None:
+                    losers +=1
+            if losers+1 == num_player:
+                for k in range(num_player):
+                    pl = total_players[k]
+                    if pl.card1 != None or pl.card2 != None:
+                        print(f"{pl.name} you have won the game. You have exiliated everyone!")
+                        print("Congratulations! ☺")
+                        print()
+                break
+        if losers+1 == num_player:
             break
         round_+=1
 

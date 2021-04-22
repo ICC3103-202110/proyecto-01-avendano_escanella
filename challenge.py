@@ -27,8 +27,9 @@ class Challenge ():
             card_=challenged.card1
         else:
             card_= challenged.card2
-        
-        if menu==5 and card_!='Duke':
+        if menu==1 and menu==2:
+            print('You can`t challenge this action')
+        elif menu==5 and card_!='Duke':
             print(f'{challenged.name} does not have the card Duke')
             if card==1:
                 reveal= challenged.card1
