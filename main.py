@@ -16,7 +16,7 @@ def create_players (deck,i):
     card2=deck[0]
     deck.pop(0)
     ply=f'Player{i}'
-    player_=Player(ply,card1,card2,None,None,7)
+    player_=Player(ply,card1,card2,None,None,2)
     return player_
 
 def menu_selection():
